@@ -8,9 +8,15 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin)
 set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pedantic")
 
+add_subdirectory(../foas_common build/foas_common)
+
 include_directories(
-  include)
+  include
+  ../foas_common/include)
 
 file(GLOB_RECURSE LIB_SRC src/message FOLLOW_SYMLINKS *.cpp)
 add_library(${PROJECT_NAME}
   ${LIB_SRC})
+
+target_link_libraries(${PROJECT_NAME}
+  foas_common)

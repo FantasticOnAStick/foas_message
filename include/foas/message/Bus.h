@@ -5,6 +5,7 @@
 namespace foas {
   namespace message {
     class Bus {
+    public:
       Bus();
       ~Bus();
     };
