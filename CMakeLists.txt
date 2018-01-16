@@ -8,7 +8,9 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin)
 set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pedantic")
 
-add_subdirectory(../foas_common build/foas_common)
+if(NOT TARGET foas_common)
+  add_subdirectory(../foas_common build/foas_common)
+endif()
 
 include_directories(
   include
