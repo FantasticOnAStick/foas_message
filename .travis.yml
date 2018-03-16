@@ -7,6 +7,8 @@ compiler:
 
 before_install:
  - git clone http://github.com/FantasticOnAStick/foas_common.git
+ - cd foas_common && ./prepare.sh
+ - cd -
  - git clone http://github.com/FantasticOnAStick/foas_message.git
 
 script:
