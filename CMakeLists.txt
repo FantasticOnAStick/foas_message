@@ -16,9 +16,11 @@ include_directories(
   include
   ../foas_common/include)
 
-file(GLOB_RECURSE LIB_SRC src/message FOLLOW_SYMLINKS *.cpp)
+file(GLOB_RECURSE LIB_SRC FOLLOW_SYMLINKS src/message/*.cpp)
 add_library(${PROJECT_NAME}
   ${LIB_SRC})
 
 target_link_libraries(${PROJECT_NAME}
   foas_common)
+
+enableGTesting()
