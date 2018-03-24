@@ -27,7 +27,7 @@ namespace foas {
       return std::find(mSuperClasses.begin(), mSuperClasses.end(), name) != mSuperClasses.end();
     }
     
-    std::list<std::shared_ptr<Class>> Class::GetSuperClasses() {
+    std::list<std::string> Class::GetSuperClasses() {
       return mSuperClasses;
     }
   }

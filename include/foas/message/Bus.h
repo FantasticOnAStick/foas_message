@@ -10,6 +10,7 @@
 #include <memory>
 
 #include <foas/message/Message.h>
+#include <foas/message/ClassManager.h>
 
 
 namespace foas {
@@ -23,11 +24,13 @@ namespace foas {
       
       std::mutex mQueuedMessagesMutex;
       std::map<std::string, std::list<std::shared_ptr<Message>>> mQueuedMessages;
-
+      
       std::shared_ptr<Bus> mParentBus;
       std::mutex mSubBussesMutex;
       std::map<std::string, std::shared_ptr<Bus>> mSubBusses;
-
+      
+      std::shared_ptr<ClassManager> mClassManager;
+      
     public:
       Bus(std::string name, std::shared_ptr<Bus> parentBus = nullptr);
       ~Bus();
@@ -40,6 +43,9 @@ namespace foas {
       
       std::shared_ptr<Bus> CreateSubBus(std::string name);
       void RemoveSubBus(std::string name);
+      
+      void SetClassManager(std::shared_ptr<ClassManager> classManager);
+      std::shared_ptr<ClassManager> GetClassManager();
     };
   }
 }

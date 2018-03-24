@@ -3,6 +3,18 @@
 
 namespace foas {
   namespace message {
+    std::shared_ptr<ClassManager> ClassManager::sSingleton = nullptr;
+    
+    
+    std::shared_ptr<ClassManager> ClassManager::GetSingleton() {
+      if(!sSingleton) {
+	sSingleton = std::make_shared<ClassManager>();
+      }
+      
+      return sSingleton;
+    }
+    
+    
     ClassManager::ClassManager() {
     }
     
@@ -52,6 +64,19 @@ namespace foas {
       }
 
       return false;
+    }
+
+    std::shared_ptr<common::Property> ClassManager::InstantiateClass(std::string name) {
+      std::shared_ptr<common::Property> instance = nullptr;
+      std::shared_ptr<Class> theClass = this->GetClass(name);
+      
+      if(theClass) {
+	instance = std::make_shared<common::Property>();
+	instance->Get("class") = std::make_shared<common::Property>(theClass->GetName());
+	instance->Get("content") = std::make_shared<common::Property>(common::Property::Dictionary);
+      }
+      
+      return instance;
     }
   }
 }

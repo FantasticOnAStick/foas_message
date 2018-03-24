@@ -3,7 +3,7 @@
 
 namespace foas {
   namespace message {
-    Bus::Bus(std::string name, std::shared_ptr<Bus> parentBus) : mName(name), mParentBus(parentBus) {
+    Bus::Bus(std::string name, std::shared_ptr<Bus> parentBus) : mName(name), mParentBus(parentBus), mClassManager(nullptr) {
     }
 
     Bus::~Bus() {
@@ -53,6 +53,14 @@ namespace foas {
       std::lock_guard<std::mutex> lockSubBusses(mSubBussesMutex);
       
       mSubBusses.erase(mSubBusses.find(name));
+    }
+    
+    void Bus::SetClassManager(std::shared_ptr<ClassManager> classManager) {
+      mClassManager = classManager;
+    }
+
+    std::shared_ptr<ClassManager> Bus::GetClassManager() {
+      return mClassManager;
     }
   }
 }

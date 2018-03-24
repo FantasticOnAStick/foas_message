@@ -6,6 +6,7 @@
 #include <list>
 #include <algorithm>
 #include <mutex>
+#include <memory>
 
 
 namespace foas {
