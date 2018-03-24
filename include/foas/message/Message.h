@@ -9,11 +9,24 @@ namespace foas {
   namespace message {
     class Message {
     private:
-      common::Property mBaseProperty;
+      std::shared_ptr<common::Property> mBaseProperty;
+      std::string mSender;
+      std::string mReceiver;
       
     public:
-      Message();
+      Message(std::shared_ptr<common::Property> baseProperty = std::make_shared<common::Property>());
       ~Message();
+      
+      std::shared_ptr<common::Property> GetProperty();
+      
+      std::shared_ptr<common::Property> operator[](std::string key);
+      std::shared_ptr<common::Property> operator[](int index);
+      
+      void SetSender(std::string sender);
+      void SetReceiver(std::string receiver);
+
+      std::string GetSender();
+      std::string GetReceiver();
     };
   }
 }
