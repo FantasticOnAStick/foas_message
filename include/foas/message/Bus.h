@@ -30,9 +30,11 @@ namespace foas {
       std::map<std::string, std::shared_ptr<Bus>> mSubBusses;
       
       std::shared_ptr<ClassManager> mClassManager;
+
+      std::shared_ptr<std::condition_variable> mNotifier;
       
     public:
-      Bus(std::string name, std::shared_ptr<Bus> parentBus = nullptr);
+      Bus(std::string name, std::shared_ptr<Bus> parentBus, std::shared_ptr<std::condition_variable> notifier);
       ~Bus();
       
       bool HasQueuedMessagesAvailable();

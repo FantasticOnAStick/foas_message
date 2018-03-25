@@ -3,7 +3,7 @@
 
 namespace foas {
   namespace message {
-    Bus::Bus(std::string name, std::shared_ptr<Bus> parentBus) : mName(name), mParentBus(parentBus), mClassManager(nullptr) {
+    Bus::Bus(std::string name, std::shared_ptr<Bus> parentBus, std::shared_ptr<std::condition_variable> notifier) : mName(name), mParentBus(parentBus), mClassManager(nullptr), mNotifier(notifier) {
     }
 
     Bus::~Bus() {
@@ -23,6 +23,8 @@ namespace foas {
       
       std::lock_guard<std::mutex> queueLock(mQueuedMessagesMutex);
       mQueuedMessages[topic].push_back(message);
+      
+      mNotifier->notify_one();
     }
     
     std::map<std::string, std::list<std::shared_ptr<Message>>> Bus::CollectQueuedMessages() {
@@ -32,6 +34,19 @@ namespace foas {
       std::map<std::string, std::list<std::shared_ptr<Message>>> queuedMessages = mQueuedMessages;
       mQueuedMessages.clear();
       mHasQueuedMessagesAvailable = false;
+      
+      std::lock_guard<std::mutex> subBussesLock(mSubBussesMutex);
+      for(std::pair<std::string, std::shared_ptr<Bus>> busPair : mSubBusses) {
+	std::map<std::string, std::list<std::shared_ptr<Message>>> queuedSubMessages = busPair.second->CollectQueuedMessages();
+	
+	for(std::pair<std::string, std::list<std::shared_ptr<Message>>> messagePair : queuedSubMessages) {
+	  for(std::shared_ptr<Message> message : messagePair.second) {
+	    message->AddSenderPrefix(busPair.first);
+	  }
+	  
+	  queuedMessages[messagePair.first].splice(queuedMessages[messagePair.first].end(), messagePair.second);
+	}
+      }
       
       return queuedMessages;
     }
@@ -43,7 +58,8 @@ namespace foas {
     std::shared_ptr<Bus> Bus::CreateSubBus(std::string name) {
       std::lock_guard<std::mutex> lockSubBusses(mSubBussesMutex);
       
-      std::shared_ptr<Bus> subBus = std::make_shared<Bus>(name, this->shared_from_this());
+      std::shared_ptr<Bus> subBus = std::make_shared<Bus>(name, this->shared_from_this(), mNotifier);
+      subBus->SetClassManager(mClassManager);
       mSubBusses[name] = subBus;
       
       return subBus;

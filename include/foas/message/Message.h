@@ -24,7 +24,9 @@ namespace foas {
       
       void SetSender(std::string sender);
       void SetReceiver(std::string receiver);
-
+      
+      void AddSenderPrefix(std::string prefix);
+      
       std::string GetSender();
       std::string GetReceiver();
     };

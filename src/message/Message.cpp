@@ -28,7 +28,15 @@ namespace foas {
     void Message::SetReceiver(std::string receiver) {
       mReceiver = receiver;
     }
+    
+    void Message::AddSenderPrefix(std::string prefix) {
+      if(mSender != "") {
+	mSender = "." + mSender;
+      }
 
+      mSender = prefix + mSender;
+    }
+    
     std::string Message::GetSender() {
       return mSender;
     }
